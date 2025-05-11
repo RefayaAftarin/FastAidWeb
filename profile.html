@@ -9,9 +9,8 @@
         body {
             background-color: #f8e1e1;
         }
-        h2{
+        h2 {
             color: rgba(159, 38, 38, 0.889);
-
         }
         .card-custom {
             border-radius: 10px;
@@ -29,42 +28,62 @@
             display: block;
             margin: 0 auto 15px;
         }
+        .profile-info {
+            margin-bottom: 15px;
+        }
+        .info-label {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="container text-center mt-4">
         <h2>Profile</h2>
         <div class="card card-custom">
-            <form>
+            <form id="profileForm">
                 <div class="text-center">
                     <img id="profilePic" src="https://via.placeholder.com/150" alt="Profile Picture" class="profile-img">
                     <input type="file" class="form-control mt-2" id="uploadPic" accept="image/*" onchange="previewImage(event)">
                 </div>
+
+                <!-- Full Name -->
                 <div class="mb-3">
-                    <label class="form-label"><b>Full Name</b></label>
-                    <input type="text" class="form-control" placeholder="Enter your full name">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label"><b>Address</b></label>
-                    <input type="text" class="form-control" placeholder="Enter your address">
+                    <div id="fullNameDisplay" class="profile-info"></div>
+                    <label class="form-label info-label"><b>Full Name</b></label>
+                    <input type="text" class="form-control" id="fullName" placeholder="Enter your full name">
                 </div>
 
+                <!-- Address -->
                 <div class="mb-3">
-                    <label class="form-label"><b>Email</b></label>
-                    <input type="email" class="form-control" placeholder="Enter your email">
+                    <div id="addressDisplay" class="profile-info"></div>
+                    <label class="form-label info-label"><b>Address</b></label>
+                    <input type="text" class="form-control" id="address" placeholder="Enter your address">
                 </div>
+
+                <!-- Email -->
                 <div class="mb-3">
-                    <label class="form-label"><b>Phone Number</b></label>
-                    <input type="tel" class="form-control" placeholder="Enter your phone number">
+                    <div id="emailDisplay" class="profile-info"></div>
+                    <label class="form-label info-label"><b>Email</b></label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email">
                 </div>
+
+                <!-- Phone Number -->
+                <div class="mb-3">
+                    <div id="phoneDisplay" class="profile-info"></div>
+                    <label class="form-label info-label"><b>Phone Number</b></label>
+                    <input type="tel" class="form-control" id="phoneNumber" placeholder="Enter your phone number">
+                </div>
+
                 <button type="submit" class="btn btn-danger w-100">Save Changes</button>
             </form>
-            <button onclick="location.href='location.html'" class="btn btn-danger w-100 mt-3">Set up location </button>
+
+            <button onclick="location.href='location.html'" class="btn btn-danger w-100 mt-3">Set up location</button>
             <button onclick="location.href='dashboard.html'" class="btn btn-secondary w-100 mt-3">Go to Dashboard</button>
         </div>
     </div>
 
     <script>
+        // Function to preview the selected image
         function previewImage(event) {
             var reader = new FileReader();
             reader.onload = function() {
@@ -73,6 +92,28 @@
             }
             reader.readAsDataURL(event.target.files[0]);
         }
+
+        // Handle form submission to update profile data
+        const form = document.getElementById('profileForm');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Get the values from the form inputs
+            const fullName = document.getElementById('fullName').value;
+            const address = document.getElementById('address').value;
+            const email = document.getElementById('email').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+
+            // Update the profile information display
+            document.getElementById('fullNameDisplay').textContent = `Full Name: ${fullName}`;
+            document.getElementById('addressDisplay').textContent = `Address: ${address}`;
+            document.getElementById('emailDisplay').textContent = `Email: ${email}`;
+            document.getElementById('phoneDisplay').textContent = `Phone Number: ${phoneNumber}`;
+
+            // Optionally, you can clear the input fields or keep the data if needed
+            // For now, we're not clearing the input fields on save, so the data persists after submission.
+        });
     </script>
 </body>
 </html>
