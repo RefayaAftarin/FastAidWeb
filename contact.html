@@ -20,6 +20,9 @@
             text-align: center;
             margin-top: 50px;
         }
+        h2{
+            color:rgba(255, 0, 0, 0.792)
+        }
     </style>
 </head>
 <body>
@@ -39,25 +42,26 @@
         </div>
     </nav>
     
-    <div class="container">
-        <h2>Contact Us</h2>
-        <p>Have questions or need support? Get in touch with us.</p>
-        <form>
-            <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+    <div class="container text-center mt-5">
+        <div class="card card-custom">
+            <h2>Contact Us</h2>
+            <div class="contact-info">
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="contact-icons fab fa-facebook-f"></i>
+                    <span>Facebook: <a href="https://www.facebook.com/YourPageID" target="_blank" class="text-decoration-none">FastAidNet</a></span>
+                </div>
+                <div class="d-flex align-items-center justify-content-center mt-3">
+                    <i class="contact-icons fas fa-envelope"></i>
+                    <span>Email: <a href="mailto:your-email@example.com" class="text-decoration-none">fastaidnet@gmail.com</a></span>
+                </div>
+                <div class="d-flex align-items-center justify-content-center mt-3">
+                    <i class="contact-icons fab fa-whatsapp"></i>
+                    <span>Phone: <a href="https://wa.me/yourPhoneNumber" class="text-decoration-none">+1234567890</a></span>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
-            </div>
-            <div class="mb-3">
-                <label for="message" class="form-label">Message</label>
-                <textarea class="form-control" id="message" rows="4" placeholder="Your message" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-danger">Send Message</button>
-        </form>
+        </div>
     </div>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </body>
 </html>
 
