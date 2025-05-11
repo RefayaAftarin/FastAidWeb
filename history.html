@@ -14,33 +14,108 @@
             height: 100vh;
         }
         .container {
-            max-width: 600px;
+            max-width: 800px;
         }
         .card-custom {
             border-radius: 10px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             background: white;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2 class="text-center">Emergency History</h2>
-        <div class="card card-custom text-center">
-            <h4>User Statistics</h4>
-            <p><strong>Total Cases Attended:</strong> 15</p>
-            <p><strong>Joining Date:</strong> January 10, 2024</p>
+        <h2 class="text-center mb-4">Emergency History</h2>
+        
+        <!-- Cards side by side using Bootstrap grid -->
+        <div class="row">
+            <!-- Total Requests as Patient Card -->
+            <div class="col-md-6">
+                <div class="card card-custom">
+                    <h4 class="text-center">Total Requests as Patient</h4>
+                    <p class="text-center"><strong>Total Requests Submitted:</strong> <span id="patientRequests">0</span></p>
+                </div>
+            </div>
+
+            <!-- Total Responses as Volunteer Card -->
+            <div class="col-md-6">
+                <div class="card card-custom">
+                    <h4 class="text-center">Total Responses as Volunteer</h4>
+                    <p class="text-center"><strong>Total Responses:</strong> <span id="volunteerResponses">0</span></p>
+                </div>
+            </div>
         </div>
+
+        <!-- Unified Status List Below Cards -->
         <div class="card card-custom">
-            <ul class="list-group">
-                <li class="list-group-item">Resolved: Fire at XYZ Street</li>
-                <li class="list-group-item">Resolved: Accident at ABC Road</li>
-                <li class="list-group-item">Resolved: Medical Emergency at LMN Avenue</li>
+            <h4 class="text-center">Incident Statuses</h4>
+            <ul class="list-group" id="incidentStatusList">
+                <!-- Statuses will be dynamically added here -->
             </ul>
         </div>
+
         <button onclick="location.href='dashboard.html'" class="btn btn-danger w-100 mt-3">Go to Dashboard</button>
     </div>
+
+    <script>
+        const incidentStatusList = document.getElementById('incidentStatusList');
+        const patientRequestsSpan = document.getElementById('patientRequests');
+        const volunteerResponsesSpan = document.getElementById('volunteerResponses');
+
+        // Load emergency data from localStorage
+        const history = JSON.parse(localStorage.getItem('emergencyHistory')) || [];
+
+        let patientRequestsCount = 0;
+        let volunteerResponsesCount = 0;
+        let ongoingCount = 0;
+
+        // Clear existing data
+        incidentStatusList.innerHTML = '';
+
+        // Process history data and display patient and volunteer stats
+        history.forEach((item) => {
+            if (item.status && item.type && item.location) {
+                // For requests (patient side)
+                if (!item.responded) {
+                    patientRequestsCount++;
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.textContent = `${item.type} at ${item.location} - Status: ${item.status}`;
+                    incidentStatusList.appendChild(li);
+
+                    if (item.status === 'Ongoing') {
+                        ongoingCount++;
+                    }
+                }
+
+                // For responses (volunteer side)
+                if (item.responded) {
+                    volunteerResponsesCount++;
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.textContent = `${item.type} at ${item.location} - Status: ${item.status}`;
+                    incidentStatusList.appendChild(li);
+
+                    if (item.status === 'Ongoing') {
+                        ongoingCount++;
+                    }
+                }
+            }
+        });
+
+        // Update total counts
+        patientRequestsSpan.textContent = patientRequestsCount;
+        volunteerResponsesSpan.textContent = volunteerResponsesCount;
+
+        // Show total ongoing count
+        const ongoingStatus = `Total Ongoing Incidents: ${ongoingCount}`;
+        const ongoingStatusItem = document.createElement('li');
+        ongoingStatusItem.className = 'list-group-item list-group-item-warning';
+        ongoingStatusItem.textContent = ongoingStatus;
+        incidentStatusList.insertAdjacentElement('afterbegin', ongoingStatusItem);
+    </script>
 </body>
 </html>
 

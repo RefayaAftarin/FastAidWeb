@@ -1,56 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FastAidNet - Emergency Request</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8e1e1;
-        }
-        .card-custom {
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            background: white;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FastAidNet - Emergency Request</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8e1e1;
+    }
+    .card-custom {
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      background: white;
+    }
+  </style>
 </head>
 <body>
-    <div class="container text-center mt-4">
-        <div class="row">
-            <div class="col-md-6">
-                <h2>Emergency Request</h2>
-                <div class="card card-custom">
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Emergency Type</label>
-                            <input type="text" class="form-control" placeholder="Enter emergency type">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Location</label>
-                            <input type="text" class="form-control" placeholder="Enter location">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <textarea class="form-control" placeholder="Describe the situation"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-danger w-100">Submit Request</button>
-                    </form>
-                    <button onclick="location.href='dashboard.html'" class="btn btn-secondary w-100 mt-3">Go to Dashboard</button>
-                </div>
+  <div class="container text-center mt-4">
+    <div class="row">
+      <!-- Emergency Request Form -->
+      <div class="col-md-6">
+        <h2>Emergency Request</h2>
+        <div class="card card-custom">
+          <form id="emergencyForm">
+            <div class="mb-3">
+              <label class="form-label">Emergency Type</label>
+              <input type="text" class="form-control" id="emergencyType" placeholder="Enter emergency type" required>
             </div>
-            <div class="col-md-6">
-                <h2>Emergency Response</h2>
-                <div class="card card-custom">
-                    <h4>Ongoing Emergencies</h4>
-                    <ul class="list-group">
-                        <li class="list-group-item">Fire at XYZ Street <button class="btn btn-sm btn-success float-end">Respond</button></li>
-                        <li class="list-group-item">Accident at ABC Road <button class="btn btn-sm btn-success float-end">Respond</button></li>
-                    </ul>
-                </div>
+            <div class="mb-3">
+              <label class="form-label">Location</label>
+              <input type="text" class="form-control" id="location" placeholder="Enter location" required>
             </div>
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea class="form-control" id="description" placeholder="Describe the situation" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-danger w-100">Submit Request</button>
+          </form>
+          <button onclick="location.href='dashboard.html'" class="btn btn-secondary w-100 mt-3">Go to Dashboard</button>
         </div>
+      </div>
+
+      <!-- Emergency Response Section -->
+      <div class="col-md-6">
+        <h2>Emergency Response</h2>
+        <div class="card card-custom">
+          <h4>Ongoing Emergencies</h4>
+          <ul class="list-group" id="emergencyList">
+            <!-- Emergencies will be added here -->
+          </ul>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <script>
+  const form = document.getElementById('emergencyForm');
+  const emergencyList = document.getElementById('emergencyList');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const type = document.getElementById('emergencyType').value;
+    const location = document.getElementById('location').value;
+    const description = document.getElementById('description').value;
+
+    const incidentName = `${type} at ${location}`;
+
+    // Save patient request
+    const history = JSON.parse(localStorage.getItem('emergencyHistory')) || [];
+    history.push({
+      type,
+      location,
+      description,
+      status: 'Ongoing',
+      role: 'patient'
+    });
+    localStorage.setItem('emergencyHistory', JSON.stringify(history));
+
+    // Show on the right-hand list
+    const listItem = document.createElement('li');
+    listItem.className = 'list-group-item';
+    listItem.innerHTML = `
+      ${incidentName}
+      <button class="btn btn-sm btn-success float-end" onclick="respondToEmergency('${type}', '${location}')">Respond</button>
+    `;
+    emergencyList.appendChild(listItem);
+
+    alert('Emergency request submitted successfully.');
+    form.reset();
+  });
+
+  function respondToEmergency(type, location) {
+    const incidentName = `${type} at ${location}`;
+    alert(`Responded to: ${incidentName}`);
+
+    const history = JSON.parse(localStorage.getItem('emergencyHistory')) || [];
+
+    // Look for matching unresponded entry, else add new one
+    let found = false;
+    for (let i = 0; i < history.length; i++) {
+      if (
+        history[i].type === type &&
+        history[i].location === location &&
+        history[i].status === 'Ongoing' &&
+        history[i].role === 'patient'
+      ) {
+        history[i].status = 'Resolved';
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      history.push({
+        type,
+        location,
+        description: '',
+        status: 'Resolved',
+        role: 'volunteer'
+      });
+    }
+
+    localStorage.setItem('emergencyHistory', JSON.stringify(history));
+  }
+</script>
+
+</body>
+</html>
 
